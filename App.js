@@ -1,4 +1,4 @@
-// App.js (Expo / React Native) - Versión móvil, una sola pantalla
+// App.js (Expo / React Native con navegación integrada)
 import React, { useRef, useState, useEffect } from "react";
 import {
   SafeAreaView,
@@ -12,11 +12,15 @@ import {
   StatusBar,
   Alert,
 } from "react-native";
+import { NavigationContainer } from "@react-navigation/native";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
+// ========================
+// IMÁGENES ESTÁTICAS
+// ========================
 const { width } = Dimensions.get("window");
 const CAROUSEL_HEIGHT = Math.round((width * 9) / 16); // ratio 16:9
 
-// IMPORTACIONES ESTÁTICAS (NO dinámicas)
 const granizados2banner = require("./assets/granizados2banner.jpg");
 const bannerBotell = require("./assets/bannerBotell.jpg");
 const propaganda = require("./assets/propaganda.jpg");
@@ -29,14 +33,18 @@ const granisadora1 = require("./assets/granisadora1.jpg");
 const granisadora2 = require("./assets/granisadora2.jpg");
 const granisadora3 = require("./assets/granisadora3.jpg");
 
-export default function App() {
-  const [dark, setDark] = useState(false); // puedes ligar a un Switch si quieres
+const Stack = createNativeStackNavigator();
+
+// ========================
+// PANTALLA PRINCIPAL (HOME)
+// ========================
+function HomeScreen({ navigation }) {
+  const [dark, setDark] = useState(false);
   const carouselRef = useRef(null);
   const [index, setIndex] = useState(0);
-
   const banners = [granizados2banner, bannerBotell, propaganda];
 
-  // Auto-advance carousel
+  // Rotación automática del carrusel
   useEffect(() => {
     const id = setInterval(() => {
       const next = (index + 1) % banners.length;
@@ -48,23 +56,10 @@ export default function App() {
     return () => clearInterval(id);
   }, [index]);
 
-  // Feature cards data
   const features = [
-    {
-      title: "Granizadoras",
-      //text: "Máquinas profesionales para crear los mejores granizados.",
-      img: granizadoraCartoon,
-    },
-    {
-      title: "Insumos",
-      //text: "Todos los ingredientes necesarios para tus productos.",
-      img: vaso,
-    },
-    {
-      title: "Dulces",
-      //text: "Complementos dulces para realzar tus creaciones y preparar el mejor coctel.",
-      img: sprite,
-    },
+    { title: "Granizadoras", img: granizadoraCartoon },
+    { title: "Insumos", img: vaso },
+    { title: "Dulces", img: sprite },
   ];
 
   const featurettes = [
@@ -73,7 +68,6 @@ export default function App() {
       lead:
         "✔️ Ideal para: Pequeños eventos, kioskos, cafeterías o venta ambulante.\n✔️ Capacidad: Produce hasta 30-40 granizados por hora.\n✔️ Características: Compacta y fácil de transportar. Sistema de enfriamiento rápido. Tanque de mezcla único. Bajo consumo eléctrico (110V/220V).\n✔️ Ventajas: Económica y perfecta para emprendedores. Funcionamiento sencillo con un solo operador.",
       img: granisadora1,
-      reverse: false,
     },
     {
       title: "Granizadora 2 tanques.",
@@ -87,14 +81,8 @@ export default function App() {
       lead:
         "✔️ Ideal para: Eventos masivos, parques temáticos o franquicias.\n✔️ Capacidad: Produce hasta 100-120 granizados por hora (3 sabores a la vez).\n✔️ Características: Tres dispensadores profesionales con boquillas antigoteo. Tecnología de enfriamiento turbo.\n✔️ Ventajas: Atiende grandes volúmenes con rapidez. Personalización premium (iluminación LED, pantalla digital).",
       img: granisadora3,
-      reverse: false,
     },
   ];
-
-  const handleDetail = (title) => {
-    // por ahora muestra alerta; puedes enlazar a otra pantalla si lo deseas
-    Alert.alert(title, "Aquí iría la página de detalles.");
-  };
 
   const theme = dark ? darkStyles : lightStyles;
 
@@ -102,7 +90,7 @@ export default function App() {
     <SafeAreaView style={[styles.safeArea, theme.container]}>
       <StatusBar barStyle={dark ? "light-content" : "dark-content"} />
       <ScrollView contentContainerStyle={styles.scrollContainer}>
-        {/* Header simple */}
+        {/* HEADER */}
         <View style={[styles.header, { backgroundColor: "#f0ec08" }]}>
           <Text style={styles.headerTitle}>IceFrioHielo</Text>
         </View>
@@ -128,33 +116,45 @@ export default function App() {
               />
             ))}
           </ScrollView>
-          {/* indicadores */}
           <View style={styles.indicators}>
             {banners.map((_, i) => (
               <View
                 key={i}
                 style={[
                   styles.indicator,
-                  i === index ? { opacity: 1, transform: [{ scale: 1.15 }] } : { opacity: 0.5 },
+                  i === index
+                    ? { opacity: 1, transform: [{ scale: 1.15 }] }
+                    : { opacity: 0.5 },
                 ]}
               />
             ))}
           </View>
         </View>
 
-        {/* FEATURES (cards) */}
+        {/* SECCIÓN DE TARJETAS */}
         <View style={styles.marketing}>
           <View style={styles.featuresRow}>
             {features.map((f, idx) => (
               <View key={idx} style={styles.featureCol}>
                 <View style={styles.featureIcon}>
-                  <Image source={f.img} style={styles.featureImage} resizeMode="cover" />
+                  <Image
+                    source={f.img}
+                    style={styles.featureImage}
+                    resizeMode="cover"
+                  />
                 </View>
                 <Text style={[styles.featureTitle, theme.text]}>{f.title}</Text>
-                <Text style={[styles.featurePar, theme.text]}>{f.text}</Text>
                 <TouchableOpacity
                   style={styles.btnOutline}
-                  onPress={() => handleDetail(f.title)}
+                  onPress={() => {
+                    if (f.title === "Granizadoras") {
+                      navigation.navigate("Granizadoras");
+                    } else if (f.title === "Insumos") {
+                      navigation.navigate("Insumos");
+                    } else {
+                      Alert.alert("Dulces", "Sección próximamente disponible.");
+                    }
+                  }}
                 >
                   <Text style={styles.btnOutlineText}>Ver detalles »</Text>
                 </TouchableOpacity>
@@ -163,22 +163,30 @@ export default function App() {
           </View>
         </View>
 
-        {/* FEATURETTES */}
+        {/* DETALLES DE GRANIZADORAS */}
         <View style={styles.featurettesContainer}>
           {featurettes.map((ft, i) => (
             <View key={i} style={styles.featuretteRow}>
-              <View style={[styles.featuretteTextWrap, ft.reverse && styles.orderRight]}>
-                <Text style={[styles.featuretteHeading, theme.text]}>{ft.title}</Text>
+              <View
+                style={[styles.featuretteTextWrap, ft.reverse && styles.orderRight]}
+              >
+                <Text style={[styles.featuretteHeading, theme.text]}>
+                  {ft.title}
+                </Text>
                 <Text style={[styles.leadText, theme.text]}>{ft.lead}</Text>
               </View>
               <View style={styles.featuretteImageWrap}>
-                <Image source={ft.img} style={styles.featuretteImage} resizeMode="cover" />
+                <Image
+                  source={ft.img}
+                  style={styles.featuretteImage}
+                  resizeMode="cover"
+                />
               </View>
             </View>
           ))}
         </View>
 
-        {/* Footer */}
+        {/* FOOTER */}
         <View style={[styles.footer]}>
           <Text style={theme.text}>© IceFrioHielo</Text>
         </View>
@@ -187,7 +195,50 @@ export default function App() {
   );
 }
 
-/* Styles */
+// ========================
+// PANTALLAS SECUNDARIAS
+// ========================
+function InsumosScreen() {
+  return (
+    <View style={styles.secondaryContainer}>
+      <Text style={styles.secondaryTitle}>Insumos</Text>
+      <Text style={{ textAlign: "center" }}>
+        Aquí encontrarás todos los ingredientes, sabores y materiales para tus
+        productos.
+      </Text>
+    </View>
+  );
+}
+
+function GranizadorasScreen() {
+  return (
+    <View style={styles.secondaryContainer}>
+      <Text style={styles.secondaryTitle}>Granizadoras</Text>
+      <Text style={{ textAlign: "center" }}>
+        Detalles y modelos disponibles de máquinas granizadoras.
+      </Text>
+    </View>
+  );
+}
+
+// ========================
+// NAVEGACIÓN PRINCIPAL
+// ========================
+export default function App() {
+  return (
+    <NavigationContainer>
+      <Stack.Navigator>
+        <Stack.Screen name="Inicio" component={HomeScreen} />
+        <Stack.Screen name="Insumos" component={InsumosScreen} />
+        <Stack.Screen name="Granizadoras" component={GranizadorasScreen} />
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+}
+
+// ========================
+// ESTILOS
+// ========================
 const styles = StyleSheet.create({
   safeArea: { flex: 1 },
   scrollContainer: { paddingBottom: 30 },
@@ -220,7 +271,7 @@ const styles = StyleSheet.create({
   marketing: { paddingVertical: 20, paddingHorizontal: 12 },
   featuresRow: { flexDirection: "row", justifyContent: "space-between", flexWrap: "wrap" },
   featureCol: {
-    width: (width - 48) / 3, // 3 columnas en pantalla grande; en móvil se ajusta por flexWrap
+    width: (width - 48) / 3,
     alignItems: "center",
     marginBottom: 18,
   },
@@ -232,14 +283,9 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     backgroundColor: "#fff",
     elevation: 6,
-    shadowColor: "violet",
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 10,
   },
   featureImage: { width: "100%", height: "100%" },
   featureTitle: { fontSize: 16, fontWeight: "600", marginTop: 4 },
-  featurePar: { fontSize: 12, textAlign: "center", marginTop: 6, paddingHorizontal: 4 },
 
   btnOutline: {
     marginTop: 10,
@@ -262,7 +308,6 @@ const styles = StyleSheet.create({
   orderRight: { order: 2 },
   featuretteHeading: { fontSize: 18, marginBottom: 8 },
   leadText: { fontSize: 14, lineHeight: 20 },
-
   featuretteImageWrap: {
     width: 300,
     height: 200,
@@ -279,9 +324,16 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
     borderTopColor: "#6c757d",
   },
+
+  secondaryContainer: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+    paddingHorizontal: 20,
+  },
+  secondaryTitle: { fontSize: 24, fontWeight: "bold", marginBottom: 10 },
 });
 
-/* Light / Dark theme objects */
 const lightStyles = {
   container: { backgroundColor: "#ffffff" },
   text: { color: "#212529" },
