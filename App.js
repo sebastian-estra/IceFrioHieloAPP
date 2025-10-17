@@ -14,6 +14,7 @@ import {
 } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { Ionicons } from '@expo/vector-icons'; // Íconos de Expo
 
 // ========================
 // IMPORTACIÓN DE PANTALLAS EXTERNAS
@@ -21,6 +22,9 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import DulcesScreen from "./screens/DulcesScreen";
 import GranizadorasScreen from "./screens/GranizadorasScreen";
 import InsumosScreen from "./screens/InsumosScreen";
+import LoginScreen from "./auth/LoginScreen";
+import RegisterScreen from "./auth/RegisterScreen";
+import ForgotPasswordScreen from "./auth/ForgotPasswordScreen";
 
 // ========================
 // IMÁGENES ESTÁTICAS
@@ -208,10 +212,32 @@ export default function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator>
-        <Stack.Screen name="Inicio" component={HomeScreen} />
+        {/* Home con ícono de login en la derecha */}
+        <Stack.Screen
+          name="Inicio"
+          component={HomeScreen}
+          options={({ navigation }) => ({
+            title: 'IceFrioHielo',
+            headerStyle: { backgroundColor: '#ff6ef3ff' },
+            headerTintColor: '#fff',
+            headerRight: () => (
+              <Ionicons
+                name="person-circle-outline"
+                size={28}
+                color="#fff"
+                style={{ marginRight: 15 }}
+                onPress={() => navigation.navigate('Login')}
+              />
+            ),
+          })}
+        />
+
         <Stack.Screen name="Insumos" component={InsumosScreen} />
         <Stack.Screen name="Granizadoras" component={GranizadorasScreen} />
         <Stack.Screen name="Dulces" component={DulcesScreen} />
+        <Stack.Screen name="Login" component={LoginScreen} />
+        <Stack.Screen name="Register" component={RegisterScreen} />
+        <Stack.Screen name="ForgotPassword" component={ForgotPasswordScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
