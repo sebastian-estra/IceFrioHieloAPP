@@ -16,6 +16,13 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 // ========================
+// IMPORTACIÓN DE PANTALLAS EXTERNAS
+// ========================
+import DulcesScreen from "./screens/DulcesScreen";
+import GranizadorasScreen from "./screens/GranizadorasScreen";
+import InsumosScreen from "./screens/InsumosScreen";
+
+// ========================
 // IMÁGENES ESTÁTICAS
 // ========================
 const { width } = Dimensions.get("window");
@@ -62,26 +69,26 @@ function HomeScreen({ navigation }) {
     { title: "Dulces", img: sprite },
   ];
 
-const featurettes = [
-  {
-    title: "Granizadora de 1 tanque",
-    lead:
-      "Compacta, ligera y perfecta para pequeños eventos o kioskos. Produce hasta 40 granizados por hora con bajo consumo eléctrico.",
-    img: granisadora1,
-  },
-  {
-    title: "Granizadora de 2 tanques",
-    lead:
-      "Ideal para negocios medianos. Permite ofrecer dos sabores a la vez, con sistema de enfriamiento independiente y alta capacidad.",
-    img: granisadora2,
-  },
-  {
-    title: "Granizadora de 3 tanques",
-    lead:
-      "Pensada para grandes eventos. Tres dispensadores con control digital y enfriamiento rápido para máxima productividad.",
-    img: granisadora3,
-  },
-];
+  const featurettes = [
+    {
+      title: "Granizadora de 1 tanque",
+      lead:
+        "Compacta, ligera y perfecta para pequeños eventos o kioskos. Produce hasta 40 granizados por hora con bajo consumo eléctrico.",
+      img: granisadora1,
+    },
+    {
+      title: "Granizadora de 2 tanques",
+      lead:
+        "Ideal para negocios medianos. Permite ofrecer dos sabores a la vez, con sistema de enfriamiento independiente y alta capacidad.",
+      img: granisadora2,
+    },
+    {
+      title: "Granizadora de 3 tanques",
+      lead:
+        "Pensada para grandes eventos. Tres dispensadores con control digital y enfriamiento rápido para máxima productividad.",
+      img: granisadora3,
+    },
+  ];
 
   const theme = dark ? darkStyles : lightStyles;
 
@@ -150,8 +157,8 @@ const featurettes = [
                       navigation.navigate("Granizadoras");
                     } else if (f.title === "Insumos") {
                       navigation.navigate("Insumos");
-                    } else {
-                      Alert.alert("Dulces", "Sección próximamente disponible.");
+                    } else if (f.title === "Dulces") {
+                      navigation.navigate("Dulces");
                     }
                   }}
                 >
@@ -195,32 +202,6 @@ const featurettes = [
 }
 
 // ========================
-// PANTALLAS SECUNDARIAS
-// ========================
-function InsumosScreen() {
-  return (
-    <View style={styles.secondaryContainer}>
-      <Text style={styles.secondaryTitle}>Insumos</Text>
-      <Text style={{ textAlign: "center" }}>
-        Aquí encontrarás todos los ingredientes, sabores y materiales para tus
-        productos.
-      </Text>
-    </View>
-  );
-}
-
-function GranizadorasScreen() {
-  return (
-    <View style={styles.secondaryContainer}>
-      <Text style={styles.secondaryTitle}>Granizadoras</Text>
-      <Text style={{ textAlign: "center" }}>
-        Detalles y modelos disponibles de máquinas granizadoras.
-      </Text>
-    </View>
-  );
-}
-
-// ========================
 // NAVEGACIÓN PRINCIPAL
 // ========================
 export default function App() {
@@ -230,6 +211,7 @@ export default function App() {
         <Stack.Screen name="Inicio" component={HomeScreen} />
         <Stack.Screen name="Insumos" component={InsumosScreen} />
         <Stack.Screen name="Granizadoras" component={GranizadorasScreen} />
+        <Stack.Screen name="Dulces" component={DulcesScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
@@ -241,16 +223,8 @@ export default function App() {
 const styles = StyleSheet.create({
   safeArea: { flex: 1 },
   scrollContainer: { paddingBottom: 30 },
-
-  // ======= HEADER =======
-  header: {
-    paddingVertical: 16,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  headerTitle: { fontSize: 20, fontWeight: "700", color: "white"},
-
-  // ======= CARRUSEL =======
+  header: { paddingVertical: 16, alignItems: "center", justifyContent: "center" },
+  headerTitle: { fontSize: 20, fontWeight: "700", color: "white" },
   carousel: { width: "100%", backgroundColor: "violet" },
   bannerImage: { height: CAROUSEL_HEIGHT },
   indicators: {
@@ -264,12 +238,10 @@ const styles = StyleSheet.create({
   indicator: {
     width: 8,
     height: 8,
-    borderRadius: 4,  
+    borderRadius: 4,
     backgroundColor: "#ffffff",
     marginHorizontal: 6,
   },
-
-  // ======= SECCIÓN DE CARACTERÍSTICAS (ÍCONOS) =======
   marketing: { paddingVertical: 20, paddingHorizontal: 12 },
   featuresRow: {
     flexDirection: "row",
@@ -292,7 +264,6 @@ const styles = StyleSheet.create({
   },
   featureImage: { width: "100%", height: "100%" },
   featureTitle: { fontSize: 16, fontWeight: "600", marginTop: 4 },
-
   btnOutline: {
     marginTop: 10,
     paddingHorizontal: 12,
@@ -306,14 +277,9 @@ const styles = StyleSheet.create({
     fontWeight: "700",
     transform: [{ skewX: "15deg" }],
   },
-
-  // ======= FEATURETTES (granizadoras) =======
-  featurettesContainer: {
-    paddingHorizontal: 16,
-    paddingVertical: 8,
-  },
+  featurettesContainer: { paddingHorizontal: 16, paddingVertical: 8 },
   featuretteRow: {
-    flexDirection: "column", // apila imagen + texto
+    flexDirection: "column",
     alignItems: "center",
     marginVertical: 35,
     backgroundColor: "#fff",
@@ -332,33 +298,21 @@ const styles = StyleSheet.create({
     overflow: "hidden",
     marginBottom: 20,
   },
-  featuretteImage: {
-    width: "100%",
-    height: "100%",
-    resizeMode: "cover",
+  featuretteImage: { width: "100%", height: "100%", resizeMode: "cover" },
+  featuretteTextWrap: {
+    paddingHorizontal: 14,
+    paddingTop: 10,
+    paddingBottom: 40,
+    alignItems: "center",
   },
- featuretteTextWrap: {
-  paddingHorizontal: 14,
-  paddingTop: 10,       
-  paddingBottom: 40,
-  alignItems: "center",
-},
-
   featuretteHeading: {
     fontSize: 18,
     fontWeight: "700",
     textAlign: "center",
     marginBottom: 6,
   },
-  leadText: {
-    fontSize: 14,
-    lineHeight: 20,
-    textAlign: "center",
-    color: "#555",
-  },
+  leadText: { fontSize: 14, lineHeight: 20, textAlign: "center", color: "#555" },
   orderRight: { order: 2 },
-
-  // ======= FOOTER =======
   footer: {
     marginTop: 20,
     paddingVertical: 16,
@@ -366,8 +320,6 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
     borderTopColor: "#6c757d",
   },
-
-  // ======= SECUNDARIAS =======
   secondaryContainer: {
     flex: 1,
     alignItems: "center",
