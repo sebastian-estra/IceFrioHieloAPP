@@ -23,7 +23,7 @@ const CAROUSEL_HEIGHT = Math.round((width * 9) / 16); // ratio 16:9
 
 const granizados2banner = require("./assets/granizados2banner.jpg");
 const bannerBotell = require("./assets/bannerBotell.jpg");
-const propaganda = require("./assets/propaganda.jpg");
+const propaganda = require("./assets/nuevaft2.jpg");
 
 const granizadoraCartoon = require("./assets/granizadoraCartoon.jpg");
 const vaso = require("./assets/vaso.jpeg");
@@ -62,27 +62,26 @@ function HomeScreen({ navigation }) {
     { title: "Dulces", img: sprite },
   ];
 
-  const featurettes = [
-    {
-      title: "Granizadora de 1 tanque.",
-      lead:
-        "✔️ Ideal para: Pequeños eventos, kioskos, cafeterías o venta ambulante.\n✔️ Capacidad: Produce hasta 30-40 granizados por hora.\n✔️ Características: Compacta y fácil de transportar. Sistema de enfriamiento rápido. Tanque de mezcla único. Bajo consumo eléctrico (110V/220V).\n✔️ Ventajas: Económica y perfecta para emprendedores. Funcionamiento sencillo con un solo operador.",
-      img: granisadora1,
-    },
-    {
-      title: "Granizadora 2 tanques.",
-      lead:
-        "✔️ Ideal para: Fiestas medianas, ferias o negocios con alta demanda.\n✔️ Capacidad: Produce hasta 60-80 granizados por hora (2 sabores simultáneos).\n✔️ Características: Dos tanques independientes para mezclar sabores diferentes. Panel de control dual. Estructura reforzada en acero inoxidable.\n✔️ Ventajas: Mayor variedad de sabores sin parar la producción.",
-      img: granisadora2,
-      reverse: true,
-    },
-    {
-      title: "Granizadora 3 tanques.",
-      lead:
-        "✔️ Ideal para: Eventos masivos, parques temáticos o franquicias.\n✔️ Capacidad: Produce hasta 100-120 granizados por hora (3 sabores a la vez).\n✔️ Características: Tres dispensadores profesionales con boquillas antigoteo. Tecnología de enfriamiento turbo.\n✔️ Ventajas: Atiende grandes volúmenes con rapidez. Personalización premium (iluminación LED, pantalla digital).",
-      img: granisadora3,
-    },
-  ];
+const featurettes = [
+  {
+    title: "Granizadora de 1 tanque",
+    lead:
+      "Compacta, ligera y perfecta para pequeños eventos o kioskos. Produce hasta 40 granizados por hora con bajo consumo eléctrico.",
+    img: granisadora1,
+  },
+  {
+    title: "Granizadora de 2 tanques",
+    lead:
+      "Ideal para negocios medianos. Permite ofrecer dos sabores a la vez, con sistema de enfriamiento independiente y alta capacidad.",
+    img: granisadora2,
+  },
+  {
+    title: "Granizadora de 3 tanques",
+    lead:
+      "Pensada para grandes eventos. Tres dispensadores con control digital y enfriamiento rápido para máxima productividad.",
+    img: granisadora3,
+  },
+];
 
   const theme = dark ? darkStyles : lightStyles;
 
@@ -91,7 +90,7 @@ function HomeScreen({ navigation }) {
       <StatusBar barStyle={dark ? "light-content" : "dark-content"} />
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         {/* HEADER */}
-        <View style={[styles.header, { backgroundColor: "#f0ec08" }]}>
+        <View style={[styles.header, { backgroundColor: "#ff6ef3ff" }]}>
           <Text style={styles.headerTitle}>IceFrioHielo</Text>
         </View>
 
@@ -237,19 +236,21 @@ export default function App() {
 }
 
 // ========================
-// ESTILOS
+// ESTILOS REAJUSTADOS
 // ========================
 const styles = StyleSheet.create({
   safeArea: { flex: 1 },
   scrollContainer: { paddingBottom: 30 },
 
+  // ======= HEADER =======
   header: {
     paddingVertical: 16,
     alignItems: "center",
     justifyContent: "center",
   },
-  headerTitle: { fontSize: 20, fontWeight: "700" },
+  headerTitle: { fontSize: 20, fontWeight: "700", color: "white"},
 
+  // ======= CARRUSEL =======
   carousel: { width: "100%", backgroundColor: "violet" },
   bannerImage: { height: CAROUSEL_HEIGHT },
   indicators: {
@@ -263,13 +264,18 @@ const styles = StyleSheet.create({
   indicator: {
     width: 8,
     height: 8,
-    borderRadius: 4,
+    borderRadius: 4,  
     backgroundColor: "#ffffff",
     marginHorizontal: 6,
   },
 
+  // ======= SECCIÓN DE CARACTERÍSTICAS (ÍCONOS) =======
   marketing: { paddingVertical: 20, paddingHorizontal: 12 },
-  featuresRow: { flexDirection: "row", justifyContent: "space-between", flexWrap: "wrap" },
+  featuresRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    flexWrap: "wrap",
+  },
   featureCol: {
     width: (width - 48) / 3,
     alignItems: "center",
@@ -295,28 +301,64 @@ const styles = StyleSheet.create({
     borderRadius: 6,
     transform: [{ skewX: "-15deg" }],
   },
-  btnOutlineText: { color: "white", fontWeight: "700", transform: [{ skewX: "15deg" }] },
+  btnOutlineText: {
+    color: "white",
+    fontWeight: "700",
+    transform: [{ skewX: "15deg" }],
+  },
 
-  featurettesContainer: { paddingHorizontal: 12, paddingVertical: 8 },
+  // ======= FEATURETTES (granizadoras) =======
+  featurettesContainer: {
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+  },
   featuretteRow: {
-    flexDirection: "row",
+    flexDirection: "column", // apila imagen + texto
     alignItems: "center",
-    marginVertical: 16,
-    flexWrap: "wrap",
+    marginVertical: 35,
+    backgroundColor: "#fff",
+    borderRadius: 12,
+    padding: 14,
+    elevation: 3,
+    shadowColor: "#000",
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    shadowOffset: { width: 0, height: 2 },
   },
-  featuretteTextWrap: { flex: 1, minWidth: 260, paddingRight: 8 },
-  orderRight: { order: 2 },
-  featuretteHeading: { fontSize: 18, marginBottom: 8 },
-  leadText: { fontSize: 14, lineHeight: 20 },
   featuretteImageWrap: {
-    width: 300,
-    height: 200,
-    borderRadius: 8,
+    width: "100%",
+    height: 310,
+    borderRadius: 10,
     overflow: "hidden",
-    alignSelf: "center",
+    marginBottom: 20,
   },
-  featuretteImage: { width: "100%", height: "100%" },
+  featuretteImage: {
+    width: "100%",
+    height: "100%",
+    resizeMode: "cover",
+  },
+ featuretteTextWrap: {
+  paddingHorizontal: 14,
+  paddingTop: 10,       
+  paddingBottom: 40,
+  alignItems: "center",
+},
 
+  featuretteHeading: {
+    fontSize: 18,
+    fontWeight: "700",
+    textAlign: "center",
+    marginBottom: 6,
+  },
+  leadText: {
+    fontSize: 14,
+    lineHeight: 20,
+    textAlign: "center",
+    color: "#555",
+  },
+  orderRight: { order: 2 },
+
+  // ======= FOOTER =======
   footer: {
     marginTop: 20,
     paddingVertical: 16,
@@ -325,6 +367,7 @@ const styles = StyleSheet.create({
     borderTopColor: "#6c757d",
   },
 
+  // ======= SECUNDARIAS =======
   secondaryContainer: {
     flex: 1,
     alignItems: "center",
