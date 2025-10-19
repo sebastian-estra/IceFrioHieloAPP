@@ -12,6 +12,9 @@ import {
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 
+// 🔹 Importa los usuarios
+import { usuarios } from "../data/users"; // Asegúrate que el archivo se llama users.js
+
 export default function LoginScreen({ navigation }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -22,13 +25,35 @@ export default function LoginScreen({ navigation }) {
       Alert.alert("Error", "Por favor completa todos los campos.");
       return;
     }
-    Alert.alert("Inicio de sesión exitoso", `Bienvenido ${email}`);
-    navigation.navigate("Inicio");
+
+    // 🔹 Busca el usuario por correo y contraseña
+    const user = usuarios.find(
+      (u) => u.email === email && u.password === password
+    );
+
+    if (user) {
+      Alert.alert("Inicio de sesión exitoso", `Bienvenido ${user.email}`);
+
+      // 🔹 Redirección según el rol
+      if (user.rol === "admin") {
+        navigation.navigate("Crud"); // 👉 Te lleva al panel del admin
+      } else if (user.rol === "cliente") {
+        navigation.navigate("Inicio"); // 👉 Te lleva al inicio del cliente
+      }
+    } else {
+      Alert.alert("Error", "Correo o contraseña incorrectos");
+    }
   };
 
   return (
-    <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === "ios" ? "padding" : "height"}>
-      <ScrollView contentContainerStyle={{ flexGrow: 1, justifyContent: "center" }} keyboardShouldPersistTaps="handled">
+    <KeyboardAvoidingView
+      style={{ flex: 1 }}
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+    >
+      <ScrollView
+        contentContainerStyle={{ flexGrow: 1, justifyContent: "center" }}
+        keyboardShouldPersistTaps="handled"
+      >
         <View style={styles.container}>
           <Text style={styles.title}>Iniciar Sesión</Text>
           <Text style={styles.subtitle}>Usa tu correo y contraseña</Text>
@@ -51,8 +76,15 @@ export default function LoginScreen({ navigation }) {
               value={password}
               onChangeText={setPassword}
             />
-            <TouchableOpacity onPress={() => setShowPassword(!showPassword)} style={styles.eyeButton}>
-              <Ionicons name={showPassword ? "eye-off" : "eye"} size={22} color="#6a1b9a" />
+            <TouchableOpacity
+              onPress={() => setShowPassword(!showPassword)}
+              style={styles.eyeButton}
+            >
+              <Ionicons
+                name={showPassword ? "eye-off" : "eye"}
+                size={22}
+                color="#6a1b9a"
+              />
             </TouchableOpacity>
           </View>
 

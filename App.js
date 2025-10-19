@@ -1,4 +1,3 @@
-// App.js (Expo / React Native con navegación integrada)
 import React, { useRef, useState, useEffect } from "react";
 import {
   SafeAreaView,
@@ -14,10 +13,10 @@ import {
 } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { Ionicons } from '@expo/vector-icons'; // Íconos de Expo
+import { Ionicons } from "@expo/vector-icons";
 
 // ========================
-// IMPORTACIÓN DE PANTALLAS EXTERNAS
+// IMPORTACIÓN DE PANTALLAS EXISTENTES
 // ========================
 import DulcesScreen from "./screens/DulcesScreen";
 import GranizadorasScreen from "./screens/GranizadorasScreen";
@@ -27,19 +26,25 @@ import RegisterScreen from "./auth/RegisterScreen";
 import ForgotPasswordScreen from "./auth/ForgotPasswordScreen";
 
 // ========================
+// IMPORTACIÓN DE PANTALLAS ADMIN (nuevas)
+// ========================
+import CrudScreen from "./admin/CrudScreen";
+import ListaProductos from "./admin/ListaProductos";
+import Categorias from "./admin/Categorias";
+import Pedidos from "./admin/Pedidos";
+
+// ========================
 // IMÁGENES ESTÁTICAS
 // ========================
 const { width } = Dimensions.get("window");
-const CAROUSEL_HEIGHT = Math.round((width * 9) / 16); // ratio 16:9
+const CAROUSEL_HEIGHT = Math.round((width * 9) / 16);
 
 const granizados2banner = require("./assets/granizados2banner.jpg");
 const bannerBotell = require("./assets/bannerBotell.jpg");
 const propaganda = require("./assets/nuevaft2.jpg");
-
 const granizadoraCartoon = require("./assets/granizadoraCartoon.jpg");
 const vaso = require("./assets/vaso.jpeg");
 const sprite = require("./assets/sprite.jpeg");
-
 const granisadora1 = require("./assets/granisadora1.jpg");
 const granisadora2 = require("./assets/granisadora2.jpg");
 const granisadora3 = require("./assets/granisadora3.jpg");
@@ -153,7 +158,9 @@ function HomeScreen({ navigation }) {
                     resizeMode="cover"
                   />
                 </View>
-                <Text style={[styles.featureTitle, theme.text]}>{f.title}</Text>
+                <Text style={[styles.featureTitle, theme.text]}>
+                  {f.title}
+                </Text>
                 <TouchableOpacity
                   style={styles.btnOutline}
                   onPress={() => {
@@ -178,7 +185,10 @@ function HomeScreen({ navigation }) {
           {featurettes.map((ft, i) => (
             <View key={i} style={styles.featuretteRow}>
               <View
-                style={[styles.featuretteTextWrap, ft.reverse && styles.orderRight]}
+                style={[
+                  styles.featuretteTextWrap,
+                  ft.reverse && styles.orderRight,
+                ]}
               >
                 <Text style={[styles.featuretteHeading, theme.text]}>
                   {ft.title}
@@ -212,32 +222,41 @@ export default function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator>
-        {/* Home con ícono de login en la derecha */}
+        {/* HOME */}
         <Stack.Screen
           name="Inicio"
           component={HomeScreen}
           options={({ navigation }) => ({
-            title: 'IceFrioHielo',
-            headerStyle: { backgroundColor: '#ff6ef3ff' },
-            headerTintColor: '#fff',
+            title: "IceFrioHielo",
+            headerStyle: { backgroundColor: "#ff6ef3ff" },
+            headerTintColor: "#fff",
             headerRight: () => (
               <Ionicons
                 name="person-circle-outline"
                 size={28}
                 color="#fff"
                 style={{ marginRight: 15 }}
-                onPress={() => navigation.navigate('Login')}
+                onPress={() => navigation.navigate("Login")}
               />
             ),
           })}
         />
 
+        {/* PANTALLAS CLIENTE */}
         <Stack.Screen name="Insumos" component={InsumosScreen} />
         <Stack.Screen name="Granizadoras" component={GranizadorasScreen} />
         <Stack.Screen name="Dulces" component={DulcesScreen} />
+
+        {/* AUTH */}
         <Stack.Screen name="Login" component={LoginScreen} />
         <Stack.Screen name="Register" component={RegisterScreen} />
         <Stack.Screen name="ForgotPassword" component={ForgotPasswordScreen} />
+
+        {/* ADMIN */}
+        <Stack.Screen name="Crud" component={CrudScreen} options={{ title: "Gestión de Productos" }} />
+        <Stack.Screen name="ListaProductos" component={ListaProductos} options={{ title: "Lista de Productos" }} />
+        <Stack.Screen name="Categorias" component={Categorias} options={{ title: "Productos por Categoría" }} />
+        <Stack.Screen name="Pedidos" component={Pedidos} options={{ title: "Pedidos Realizados" }} />
       </Stack.Navigator>
     </NavigationContainer>
   );
