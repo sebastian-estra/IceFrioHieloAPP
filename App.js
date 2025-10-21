@@ -142,39 +142,45 @@ function HomeScreen({ navigation }) {
           </View>
         </View>
 
-        {/* SECCIÓN DE TARJETAS */}
-        <View style={styles.marketing}>
-          <View style={styles.featuresRow}>
-            {features.map((f, idx) => (
-              <View key={idx} style={styles.featureCol}>
-                <View style={styles.featureIcon}>
-                  <Image
-                    source={f.img}
-                    style={styles.featureImage}
-                    resizeMode="cover"
-                  />
-                </View>
-                <Text style={[styles.featureTitle, theme.text]}>
-                  {f.title}
-                </Text>
-                <TouchableOpacity
-                  style={styles.btnOutline}
-                  onPress={() => {
-                    if (f.title === "Granizadoras") {
-                      navigation.navigate("Granizadoras");
-                    } else if (f.title === "Insumos") {
-                      navigation.navigate("Insumos");
-                    } else if (f.title === "Dulces") {
-                      navigation.navigate("Dulces");
-                    }
-                  }}
-                >
-                  <Text style={styles.btnOutlineText}>Ver detalles »</Text>
-                </TouchableOpacity>
-              </View>
-            ))}
-          </View>
+     {/* SECCIÓN DE TARJETAS */}
+<View style={styles.marketing}>
+  <View style={styles.featuresRow}>
+    {features.map((f, idx) => (
+      <View key={idx} style={styles.featureCol}>
+        <View style={styles.featureIcon}>
+          <Image
+            source={f.img}
+            style={[
+              styles.featureImage,
+              f.title === "Dulces" && { width: "75%", height: "105%", marginLeft: 15, resizeMode: "contain" } 
+            ]}
+            resizeMode={f.title === "Dulces" ? "contain" : "cover"} 
+          />
         </View>
+
+        <Text style={[styles.featureTitle, theme.text]}>
+          {f.title}
+        </Text>
+
+        <TouchableOpacity
+          style={styles.btnOutline}
+          onPress={() => {
+            if (f.title === "Granizadoras") {
+              navigation.navigate("Granizadoras");
+            } else if (f.title === "Insumos") {
+              navigation.navigate("Insumos");
+            } else if (f.title === "Dulces") {
+              navigation.navigate("Dulces");
+            }
+          }}
+        >
+          <Text style={styles.btnOutlineText}>Ver detalles »</Text>
+        </TouchableOpacity>
+      </View>
+    ))}
+  </View>
+</View>
+
 
         {/* DETALLES DE GRANIZADORAS */}
         <View style={styles.featurettesContainer}>
