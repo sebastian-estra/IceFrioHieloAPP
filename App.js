@@ -105,11 +105,7 @@ function HomeScreen({ navigation }) {
     <SafeAreaView style={[styles.safeArea, theme.container]}>
       <StatusBar barStyle={dark ? "light-content" : "dark-content"} />
       <ScrollView contentContainerStyle={styles.scrollContainer}>
-        {/* HEADER */}
-        <View style={[styles.header, { backgroundColor: "#ff6ef3ff" }]}>
-          <Text style={styles.headerTitle}>IceFrioHielo</Text>
-        </View>
-
+       
         {/* CARRUSEL */}
         <View style={[styles.carousel, { height: CAROUSEL_HEIGHT }]}>
           <ScrollView
