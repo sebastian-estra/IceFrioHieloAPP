@@ -9,9 +9,8 @@ import {
   StyleSheet,
   Dimensions,
   StatusBar,
-  Alert,
 } from "react-native";
-import { NavigationContainer } from "@react-navigation/native";
+import { NavigationContainer, useNavigation } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { Ionicons } from "@expo/vector-icons";
 
@@ -54,13 +53,14 @@ const Stack = createNativeStackNavigator();
 // ========================
 // PANTALLA PRINCIPAL (HOME)
 // ========================
-function HomeScreen({ navigation }) {
+function HomeScreen({ navigation, route }) {
   const [dark, setDark] = useState(false);
   const carouselRef = useRef(null);
   const [index, setIndex] = useState(0);
+  const [menuVisible, setMenuVisible] = useState(false);
+
   const banners = [granizados2banner, bannerBotell, propaganda];
 
-  // Rotación automática del carrusel
   useEffect(() => {
     const id = setInterval(() => {
       const next = (index + 1) % banners.length;
@@ -71,6 +71,13 @@ function HomeScreen({ navigation }) {
     }, 4000);
     return () => clearInterval(id);
   }, [index]);
+
+  // Permitir que el header controle el menú
+  useEffect(() => {
+    if (route.params?.toggleMenu) {
+      route.params.toggleMenu.current = () => setMenuVisible((prev) => !prev);
+    }
+  }, [route.params]);
 
   const features = [
     { title: "Granizadoras", img: granizadoraCartoon },
@@ -104,8 +111,8 @@ function HomeScreen({ navigation }) {
   return (
     <SafeAreaView style={[styles.safeArea, theme.container]}>
       <StatusBar barStyle={dark ? "light-content" : "dark-content"} />
+
       <ScrollView contentContainerStyle={styles.scrollContainer}>
-       
         {/* CARRUSEL */}
         <View style={[styles.carousel, { height: CAROUSEL_HEIGHT }]}>
           <ScrollView
@@ -142,56 +149,47 @@ function HomeScreen({ navigation }) {
           </View>
         </View>
 
-     {/* SECCIÓN DE TARJETAS */}
-<View style={styles.marketing}>
-  <View style={styles.featuresRow}>
-    {features.map((f, idx) => (
-      <View key={idx} style={styles.featureCol}>
-        <View style={styles.featureIcon}>
-          <Image
-            source={f.img}
-            style={[
-              styles.featureImage,
-              f.title === "Dulces" && { width: "75%", height: "105%", marginLeft: 15, resizeMode: "contain" } 
-            ]}
-            resizeMode={f.title === "Dulces" ? "contain" : "cover"} 
-          />
+        {/* SECCIÓN DE TARJETAS */}
+        <View style={styles.marketing}>
+          <View style={styles.featuresRow}>
+            {features.map((f, idx) => (
+              <View key={idx} style={styles.featureCol}>
+                <View style={styles.featureIcon}>
+                  <Image
+                    source={f.img}
+                    style={[
+                      styles.featureImage,
+                      f.title === "Dulces" && {
+                        width: "75%",
+                        height: "105%",
+                        marginLeft: 15,
+                        resizeMode: "contain",
+                      },
+                    ]}
+                    resizeMode={f.title === "Dulces" ? "contain" : "cover"}
+                  />
+                </View>
+
+                <Text style={[styles.featureTitle, theme.text]}>
+                  {f.title}
+                </Text>
+
+                <TouchableOpacity
+                  style={styles.btnOutline}
+                  onPress={() => navigation.navigate(f.title)}
+                >
+                  <Text style={styles.btnOutlineText}>Ver detalles »</Text>
+                </TouchableOpacity>
+              </View>
+            ))}
+          </View>
         </View>
-
-        <Text style={[styles.featureTitle, theme.text]}>
-          {f.title}
-        </Text>
-
-        <TouchableOpacity
-          style={styles.btnOutline}
-          onPress={() => {
-            if (f.title === "Granizadoras") {
-              navigation.navigate("Granizadoras");
-            } else if (f.title === "Insumos") {
-              navigation.navigate("Insumos");
-            } else if (f.title === "Dulces") {
-              navigation.navigate("Dulces");
-            }
-          }}
-        >
-          <Text style={styles.btnOutlineText}>Ver detalles »</Text>
-        </TouchableOpacity>
-      </View>
-    ))}
-  </View>
-</View>
-
 
         {/* DETALLES DE GRANIZADORAS */}
         <View style={styles.featurettesContainer}>
           {featurettes.map((ft, i) => (
             <View key={i} style={styles.featuretteRow}>
-              <View
-                style={[
-                  styles.featuretteTextWrap,
-                  ft.reverse && styles.orderRight,
-                ]}
-              >
+              <View style={styles.featuretteTextWrap}>
                 <Text style={[styles.featuretteHeading, theme.text]}>
                   {ft.title}
                 </Text>
@@ -213,6 +211,38 @@ function HomeScreen({ navigation }) {
           <Text style={theme.text}>© IceFrioHielo</Text>
         </View>
       </ScrollView>
+
+      {/* MENÚ LATERAL */}
+      {menuVisible && (
+        <View style={styles.sideMenu}>
+          <TouchableOpacity
+            onPress={() => setMenuVisible(false)}
+            style={styles.closeBtn}
+          >
+            <Ionicons name="close" size={28} color="#fff" />
+          </TouchableOpacity>
+
+          <TouchableOpacity onPress={() => navigation.navigate("Categorias")}>
+            <Text style={styles.menuItem}>Ofertas</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity onPress={() => navigation.navigate("Insumos")}>
+            <Text style={styles.menuItem}>Insumos</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity onPress={() => navigation.navigate("Granizadoras")}>
+            <Text style={styles.menuItem}>Granizados</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity onPress={() => navigation.navigate("Dulces")}>
+            <Text style={styles.menuItem}>Dulces</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity onPress={() => navigation.navigate("Pedidos")}>
+            <Text style={styles.menuItem}>🛒 Carrito</Text>
+          </TouchableOpacity>
+        </View>
+      )}
     </SafeAreaView>
   );
 }
@@ -221,16 +251,37 @@ function HomeScreen({ navigation }) {
 // NAVEGACIÓN PRINCIPAL
 // ========================
 export default function App() {
+  const toggleMenu = useRef(null);
+
   return (
     <NavigationContainer>
       <Stack.Navigator>
-        {/* HOME */}
         <Stack.Screen
           name="Inicio"
           component={HomeScreen}
+          initialParams={{ toggleMenu }}
           options={({ navigation }) => ({
-            title: "IceFrioHielo",
-            headerStyle: { backgroundColor: "#ff6ef3ff" },
+            headerTitle: () => (
+              <View style={{ flexDirection: "row", alignItems: "center" }}>
+                {/* 🔹 ESTE BOTÓN AHORA ABRE EL MENÚ */}
+                <TouchableOpacity onPress={() => toggleMenu.current?.()}>
+                  <Ionicons
+                    name="menu"
+                    size={26}
+                    color="#fff"
+                    style={{ marginRight: 8 }}
+                  />
+                </TouchableOpacity>
+                <Text
+                  style={{ color: "#fff", fontSize: 20, fontWeight: "bold" }}
+                >
+                  IceFrioHielo
+                </Text>
+              </View>
+            ),
+            headerStyle: {
+              backgroundColor: "#ee82ee", // 💜 cambia este color del banner
+            },
             headerTintColor: "#fff",
             headerRight: () => (
               <Ionicons
@@ -244,34 +295,47 @@ export default function App() {
           })}
         />
 
-        {/* PANTALLAS CLIENTE */}
+        {/* DEMÁS PANTALLAS */}
         <Stack.Screen name="Insumos" component={InsumosScreen} />
         <Stack.Screen name="Granizadoras" component={GranizadorasScreen} />
         <Stack.Screen name="Dulces" component={DulcesScreen} />
-
-        {/* AUTH */}
         <Stack.Screen name="Login" component={LoginScreen} />
         <Stack.Screen name="Register" component={RegisterScreen} />
         <Stack.Screen name="ForgotPassword" component={ForgotPasswordScreen} />
-
-        {/* ADMIN */}
-        <Stack.Screen name="Crud" component={CrudScreen} options={{ title: "Gestión de Productos" }} />
-        <Stack.Screen name="ListaProductos" component={ListaProductos} options={{ title: "Lista de Productos" }} />
-        <Stack.Screen name="Categorias" component={Categorias} options={{ title: "Productos por Categoría" }} />
-        <Stack.Screen name="Pedidos" component={Pedidos} options={{ title: "Pedidos Realizados" }} />
+        <Stack.Screen name="Crud" component={CrudScreen} />
+        <Stack.Screen name="ListaProductos" component={ListaProductos} />
+        <Stack.Screen name="Categorias" component={Categorias} />
+        <Stack.Screen name="Pedidos" component={Pedidos} />
       </Stack.Navigator>
     </NavigationContainer>
   );
 }
 
 // ========================
-// ESTILOS REAJUSTADOS
+// ESTILOS
 // ========================
 const styles = StyleSheet.create({
   safeArea: { flex: 1 },
   scrollContainer: { paddingBottom: 30 },
-  header: { paddingVertical: 16, alignItems: "center", justifyContent: "center" },
-  headerTitle: { fontSize: 20, fontWeight: "700", color: "white" },
+  sideMenu: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    width: "70%",
+    height: "100%",
+    backgroundColor: "#ee82ee", // 💜 color del menú lateral
+    paddingTop: 60,
+    paddingHorizontal: 20,
+    zIndex: 20,
+    elevation: 10,
+  },
+  closeBtn: { position: "absolute", top: 20, right: 20 },
+  menuItem: {
+    color: "#fff",
+    fontSize: 18,
+    marginVertical: 12,
+    fontWeight: "600",
+  },
   carousel: { width: "100%", backgroundColor: "violet" },
   bannerImage: { height: CAROUSEL_HEIGHT },
   indicators: {
@@ -333,10 +397,6 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     padding: 14,
     elevation: 3,
-    shadowColor: "#000",
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    shadowOffset: { width: 0, height: 2 },
   },
   featuretteImageWrap: {
     width: "100%",
@@ -359,7 +419,6 @@ const styles = StyleSheet.create({
     marginBottom: 6,
   },
   leadText: { fontSize: 14, lineHeight: 20, textAlign: "center", color: "#555" },
-  orderRight: { order: 2 },
   footer: {
     marginTop: 20,
     paddingVertical: 16,
@@ -367,13 +426,6 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
     borderTopColor: "#6c757d",
   },
-  secondaryContainer: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-    paddingHorizontal: 20,
-  },
-  secondaryTitle: { fontSize: 24, fontWeight: "bold", marginBottom: 10 },
 });
 
 const lightStyles = {
