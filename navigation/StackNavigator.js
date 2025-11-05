@@ -9,6 +9,9 @@ import HomeScreen from "../screens/HomeScreen";
 import InsumosScreen from "../screens/InsumosScreen";
 import GranizadorasScreen from "../screens/GranizadorasScreen";
 import DulcesScreen from "../screens/DulcesScreen";
+import OfertasScreens from "../screens/OfertasScreens";
+import CarritoScreens from "../screens/CarritoScreens";
+
 
 // 🔹 Carpetas externas
 import LoginScreen from "../auth/LoginScreen";
@@ -71,6 +74,9 @@ export default function StackNavigator() {
       <Stack.Screen name="ListaProductos" component={ListaProductos} />
       <Stack.Screen name="Categorias" component={Categorias} />
       <Stack.Screen name="Pedidos" component={Pedidos} />
+      <Stack.Screen name="Ofertas" component={OfertasScreens} />
+      <Stack.Screen name="Carrito" component={CarritoScreens} />
+
     </Stack.Navigator>
   );
 }

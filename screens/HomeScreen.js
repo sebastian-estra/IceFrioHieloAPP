@@ -83,7 +83,7 @@ export default function HomeScreen({ navigation, route }) {
             <Ionicons name="close" size={28} color="#fff" />
           </TouchableOpacity>
 
-          <TouchableOpacity onPress={() => navigation.navigate("Categorias")}>
+          <TouchableOpacity onPress={() => navigation.navigate("Ofertas")}>
             <Text style={styles.menuItem}>Ofertas</Text>
           </TouchableOpacity>
           <TouchableOpacity onPress={() => navigation.navigate("Insumos")}>
@@ -95,7 +95,7 @@ export default function HomeScreen({ navigation, route }) {
           <TouchableOpacity onPress={() => navigation.navigate("Dulces")}>
             <Text style={styles.menuItem}>Dulces</Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => navigation.navigate("Pedidos")}>
+          <TouchableOpacity onPress={() => navigation.navigate("Carrito")}>
             <Text style={styles.menuItem}>🛒 Carrito</Text>
           </TouchableOpacity>
         </View>
